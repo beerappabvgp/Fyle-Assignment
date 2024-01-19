@@ -5,6 +5,9 @@ let tempPage = 1;
 let tempItemsPerPage = 10;
 const repositoryCache = {}; 
 const totalPages = 9;
+const loadingIndicator = document.getElementById('loadingIndicator');
+
+
 async function fetchGitHubRepos(username, reposPerPage = itemsPerPage, page = currentPage) {
     console.log(`from api ${itemsPerPage}`);
     const apiUrl = `https://api.github.com/users/${username}/repos?per_page=${reposPerPage}&page=${page}`;
@@ -48,6 +51,7 @@ const username = "johnpapa";
 
 async function fetchAndStoreRepos(page = 1 , items) {
   try {
+    showLoadingIndicator(true); 
     console.log(`from fetchAndStoreRepos , ${page}`);
     const repositoriesData = await fetchGitHubRepos(username, reposPerPage = items, page);
     repositories.length = 0; // Clear existing repositories
@@ -59,6 +63,8 @@ async function fetchAndStoreRepos(page = 1 , items) {
     showRepositories(items);
   } catch (error) {
     console.error("Failed to fetch repositories:", error.message);
+  } finally {
+    showLoadingIndicator(false);
   }
 }
 
@@ -100,6 +106,14 @@ function showRepositories(items) {
     reposContainer.appendChild(repoCard);
   });
 }
+
+function showLoadingIndicator(show) {
+    if (show) {
+      loadingIndicator.style.display = 'block';
+    } else {
+      loadingIndicator.style.display = 'none';
+    }
+  }
 
 function displayDetails() {
   if (repositories.length === 0) {
