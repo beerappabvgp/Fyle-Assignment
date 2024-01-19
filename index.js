@@ -5,38 +5,41 @@ let tempPage = 1;
 let tempItemsPerPage = 10;
 const repositoryCache = {}; 
 const totalPages = 9;
-
 async function fetchGitHubRepos(username, reposPerPage = itemsPerPage, page = currentPage) {
     console.log(`from api ${itemsPerPage}`);
-  const apiUrl = `https://api.github.com/users/${username}/repos?per_page=${reposPerPage}&page=${page}`;
-  const headers = {
-    "Content-Type": "application/json",
-  };
-  const cacheKey = `${reposPerPage}_${page}`;
-
-  try {
-    if (repositoryCache[page] && repositoryCache[page].reposPerPage === reposPerPage) {
-      console.log(`Fetching data from cache for page ${page}`);
-      return repositoryCache[page].data;
+    const apiUrl = `https://api.github.com/users/${username}/repos?per_page=${reposPerPage}&page=${page}`;
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    const cacheKey = `${page}_${reposPerPage}`;
+  
+    try {
+      if (repositoryCache[page] && repositoryCache[page].reposPerPage === reposPerPage) {
+        console.log(`Fetching data from cache for page ${page}`);
+        return repositoryCache[page].data;
+      }
+  
+      const response = await fetch(apiUrl, { headers });
+  
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch repositories. Status: ${
+            response.status
+          }, Response: ${await response.text()}`
+        );
+      }
+  
+      const repositoriesData = await response.json();
+      repositoryCache[page] = {
+        reposPerPage,
+        data: repositoriesData,
+      };
+  
+      return repositoriesData;
+    } catch (error) {
+      throw new Error(`Error fetching repositories: ${error.message}`);
     }
-
-    const response = await fetch(apiUrl, { headers });
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch repositories. Status: ${
-          response.status
-        }, Response: ${await response.text()}`
-      );
-    }
-
-    const repositoriesData = await response.json();
-    repositoryCache[cacheKey] = repositoriesData;
-    return repositoriesData;
-  } catch (error) {
-    throw new Error(`Error fetching repositories: ${error.message}`);
   }
-}
 
 
 
@@ -129,20 +132,19 @@ function displayDetails() {
 fetchAndStoreRepos();
 
 function fetchAndStorePrevPageRepos() {
-    if (tempPage >= 1) {
+    if (tempPage > 1) {
       const prevPage = tempPage - 1;
   
       // Find matching cache key in repositoryCache
       const cacheKey = Object.keys(repositoryCache).find(key => {
-        const [cachedItemsPerPage, cachedPage] = key.split('_');
-        return cachedPage === prevPage.toString();
+        return key === prevPage.toString();
       });
-  
+      console.log(`cacheKey`);
       if (cacheKey) {
         console.log(`entered inside cachekey, ${cacheKey}`);
         // Split the cache key into pageNumber and itemsPerPage
-        const [tempItemsPerPage,pageNumber] = cacheKey.split('_');
-        fetchAndStoreRepos(parseInt(pageNumber), parseInt(tempItemsPerPage));
+        const tempItemsPerPage = repositoryCache[cacheKey].reposPerPage;
+        fetchAndStoreRepos(parseInt(cacheKey), parseInt(tempItemsPerPage));
       }
       else {
         fetchAndStoreRepos(tempPage - 1, 10);
@@ -151,9 +153,25 @@ function fetchAndStorePrevPageRepos() {
   }
 
 function fetchAndStoreNextPageRepos() {
-  if (tempPage < totalPages) {
-    fetchAndStoreRepos(tempPage + 1);
-  }
+
+    if (tempPage < totalPages) {
+        const nextPage = tempPage + 1;
+    
+        // Find matching cache key in repositoryCache
+        const cacheKey = Object.keys(repositoryCache).find(key => {
+          return key === nextPage.toString();
+        });
+        console.log(`cacheKey`);
+        if (cacheKey) {
+          console.log(`entered inside cachekey, ${cacheKey}`);
+          // Split the cache key into pageNumber and itemsPerPage
+          const tempItemsPerPage = repositoryCache[cacheKey].reposPerPage;
+          fetchAndStoreRepos(parseInt(cacheKey), parseInt(tempItemsPerPage));
+        }
+        else {
+          fetchAndStoreRepos(tempPage + 1, 10);
+        }
+      }
 }
 
 function fetchOlder() {
