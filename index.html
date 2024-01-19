@@ -33,8 +33,8 @@
 
   <!-- Box for navigating -->
   <div class="number-row" id="paginationButtonsContainer">
-    <button class="pagination-button" onclick="fetchAndStoreRepos('prev')" id="prevPageButton"><<</button>
-    <button class="pagination-button" onclick="fetchAndStoreRepos(1)">1</button>
+    <button class="pagination-button" id="prevPageButton"><<</button>
+    <button class="pagination-button" onclick="fetchAndStoreRepos(1 , 30)">1</button>
     <button class="pagination-button" onclick="fetchAndStoreRepos(2)">2</button>
     <button class="pagination-button" onclick="fetchAndStoreRepos(3)">3</button>
     <button class="pagination-button" onclick="fetchAndStoreRepos(4)">4</button>
@@ -43,15 +43,13 @@
     <button class="pagination-button" onclick="fetchAndStoreRepos(7)">7</button>
     <button class="pagination-button" onclick="fetchAndStoreRepos(8)">8</button>
     <button class="pagination-button" onclick="fetchAndStoreRepos(9)">9</button>
-    <button class="pagination-button" onclick="fetchAndStoreRepos('next')" id="nextPageButton">>></button>
-    <!-- <button class="pagination-button" onclick="fetchAndStoreRepos(3)">3</button> -->
-    <!-- Add more buttons as needed -->
+    <button class="pagination-button" id="nextPageButton">>></button>
   </div>
   <!-- end for box navigation -->
 
   <div class="pagination-buttons">
-    <button class="pagination-button">&lt; Older</button>
-    <button class="pagination-button">Newer &gt;</button>
+    <button class="pagination-button" onclick="fetchAndStoreRepos()" id="older">&lt; Older</button>
+    <button class="pagination-button" onclick="fetchAndStoreRepos()" id="newer">Newer &gt;</button>
   </div>
 
   <script src="index.js"></script>

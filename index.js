@@ -3,20 +3,21 @@ const itemsPerPage = 10;
 let currentPage = 1;
 let tempPage = 1;
 const repositoryCache = {}; 
+const totalPages = 9;
 
 async function fetchGitHubRepos(username, reposPerPage = itemsPerPage, page = currentPage) {
+    console.log(`from api ${itemsPerPage}`);
   const apiUrl = `https://api.github.com/users/${username}/repos?per_page=${reposPerPage}&page=${page}`;
   const headers = {
     "Content-Type": "application/json",
   };
 
   try {
-
     if (repositoryCache[page]) {
-        console.log(`Fetching data from cache for page ${page}`);
-        return repositoryCache[page];
+      console.log(`Fetching data from cache for page ${page}`);
+      return repositoryCache[page];
     }
-  
+
     const response = await fetch(apiUrl, { headers });
 
     if (!response.ok) {
@@ -35,29 +36,31 @@ async function fetchGitHubRepos(username, reposPerPage = itemsPerPage, page = cu
   }
 }
 
+
+
+
 const username = "johnpapa";
 
-async function fetchAndStoreRepos(page = 1) {
+async function fetchAndStoreRepos(page = 1 , items) {
   try {
-    console.log(page);
-    const repositoriesData = await fetchGitHubRepos(username, itemsPerPage, page);
+    console.log(`from fetchAndStoreRepos , ${page}`);
+    const repositoriesData = await fetchGitHubRepos(username, reposPerPage = items, page);
     repositories.length = 0; // Clear existing repositories
     repositories.push(...repositoriesData);
     tempPage = page;
     console.log(repositories);
     // html logic starts from here
     displayDetails();
-    showRepositories();
+    showRepositories(items);
   } catch (error) {
     console.error("Failed to fetch repositories:", error.message);
   }
 }
 
-function showRepositories() {
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = currentPage * itemsPerPage;
-  console.log(startIndex,endIndex);
-//   console.log(repositories);
+function showRepositories(items) {
+  const startIndex = 0;
+  const endIndex = items;
+  console.log(startIndex, endIndex);
   const repositoriesToShow = repositories.slice(startIndex, endIndex);
 
   const reposContainer = document.getElementById('reposContainer');
@@ -91,7 +94,6 @@ function showRepositories() {
 
     reposContainer.appendChild(repoCard);
   });
-//   currentPage = page;
 }
 
 function displayDetails() {
@@ -121,44 +123,31 @@ function displayDetails() {
   githubUrl.innerHTML = user.html_url;
 }
 
-// function fetchAndStoreNextRepos() {
-//     if (currentPage < totalPages) {
-//       currentPage++;
-//       fetchAndStoreRepos(currentPage);
-//     }
-//   }
-  
-//   function fetchAndStorePrevRepos() {
-//     if (currentPage > 1) {
-//       currentPage--;
-//       fetchAndStoreRepos(currentPage);
-//     }
-//   }
-// document.getElementById('prevPageButton').addEventListener('click', fetchAndStorePrevRepos);
-// document.getElementById('nextPageButton').addEventListener('click', fetchAndStoreNextRepos);
-
-
 // Initial setup
 fetchAndStoreRepos();
 
-
 function fetchAndStorePrevPageRepos() {
-    if (currentPage > 1) {
-      fetchAndStoreRepos(currentPage - 1);
-    }
+  if (tempPage > 1) {
+    fetchAndStoreRepos(tempPage - 1);
   }
-  
-  function fetchAndStoreNextPageRepos() {
-    const totalPages = 10;
-    if (currentPage < totalPages) {
-      fetchAndStoreRepos(currentPage + 1);
-    }
+}
+
+function fetchAndStoreNextPageRepos() {
+  if (tempPage < totalPages) {
+    fetchAndStoreRepos(tempPage + 1);
   }
-  
-  // ... (existing code)
-  
-  // Add event listeners to the dynamically calculated prev and next buttons
-  document.getElementById('prevPageButton').addEventListener('click', fetchAndStorePrevPageRepos);
-  document.getElementById('nextPageButton').addEventListener('click', fetchAndStoreNextPageRepos);
-  
-  // ... (existing code)
+}
+
+function fetchOlder() {
+
+}
+function fetchNewer() {
+
+}
+
+// Add event listeners to the hardcoded buttons
+document.getElementById('prevPageButton').addEventListener('click', fetchAndStorePrevPageRepos);
+document.getElementById('nextPageButton').addEventListener('click', fetchAndStoreNextPageRepos);
+
+document.getElementById('older').addEventListener('click', fetchOlder);
+document.getElementById('newer').addEventListener('click', fetchNewer);
