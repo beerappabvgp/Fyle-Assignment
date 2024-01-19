@@ -2,6 +2,7 @@ const repositories = [];
 const itemsPerPage = 10;
 let currentPage = 1;
 let tempPage = 1;
+let tempItemsPerPage = 10;
 const repositoryCache = {}; 
 const totalPages = 9;
 
@@ -11,11 +12,12 @@ async function fetchGitHubRepos(username, reposPerPage = itemsPerPage, page = cu
   const headers = {
     "Content-Type": "application/json",
   };
+  const cacheKey = `${reposPerPage}_${page}`;
 
   try {
-    if (repositoryCache[page]) {
+    if (repositoryCache[page] && repositoryCache[page].reposPerPage === reposPerPage) {
       console.log(`Fetching data from cache for page ${page}`);
-      return repositoryCache[page];
+      return repositoryCache[page].data;
     }
 
     const response = await fetch(apiUrl, { headers });
@@ -29,7 +31,7 @@ async function fetchGitHubRepos(username, reposPerPage = itemsPerPage, page = cu
     }
 
     const repositoriesData = await response.json();
-    repositoryCache[page] = repositoriesData;
+    repositoryCache[cacheKey] = repositoriesData;
     return repositoriesData;
   } catch (error) {
     throw new Error(`Error fetching repositories: ${error.message}`);
@@ -127,10 +129,26 @@ function displayDetails() {
 fetchAndStoreRepos();
 
 function fetchAndStorePrevPageRepos() {
-  if (tempPage > 1) {
-    fetchAndStoreRepos(tempPage - 1);
+    if (tempPage >= 1) {
+      const prevPage = tempPage - 1;
+  
+      // Find matching cache key in repositoryCache
+      const cacheKey = Object.keys(repositoryCache).find(key => {
+        const [cachedItemsPerPage, cachedPage] = key.split('_');
+        return cachedPage === prevPage.toString();
+      });
+  
+      if (cacheKey) {
+        console.log(`entered inside cachekey, ${cacheKey}`);
+        // Split the cache key into pageNumber and itemsPerPage
+        const [tempItemsPerPage,pageNumber] = cacheKey.split('_');
+        fetchAndStoreRepos(parseInt(pageNumber), parseInt(tempItemsPerPage));
+      }
+      else {
+        fetchAndStoreRepos(tempPage - 1, 10);
+      }
+    }
   }
-}
 
 function fetchAndStoreNextPageRepos() {
   if (tempPage < totalPages) {
