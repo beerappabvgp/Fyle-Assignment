@@ -18,35 +18,24 @@
             <img src="" alt="Profile picture" id="profileImage" class="img-fluid" />
         <a href="" id="github"></a>
         </div>
-        <!-- details -->
         <div class="userinfo">
             <h1 id="userName"></h1>
             <p id="location"></p>
             <span>Following - <a href="" target="_blank" id="following_url"></a></span>
             <span>Followers - <a href="" target="_blank" id="followers"></a></span>
-            <!-- <p id="githubLink"><a href="" target="_blank" id="github">GitHub Profile</a></p> -->
         </div>
-        <!-- search functionality -->
         <div id="parentSearch">
             <input type="text" id="searchInput" placeholder="Search repositories...">
 <button onclick="searchRepositories()" id="search">Search</button>
         </div>
         </div>
     </div>
-
-    <!-- section -->
     <a href="" id="github"></a>
-    <!-- section end -->
-
-    <!-- cards for repos -->
     <div class="repos-container" id="reposContainer"></div>
-    <!-- end for repos -->
-
-    <!-- Box for navigating -->
     <div class="number-row" id="paginationButtonsContainer">
         <button class="pagination-button" id="prevPageButton"><<</button>
-        <button class="pagination-button" onclick="fetchAndStoreRepos(1 , 100)">1</button>
-        <button class="pagination-button" onclick="fetchAndStoreRepos(2 , 50)">2</button>
+        <button class="pagination-button" onclick="fetchAndStoreRepos(1,20)">1</button>
+        <button class="pagination-button" onclick="fetchAndStoreRepos(2)">2</button>
         <button class="pagination-button" onclick="fetchAndStoreRepos(3)">3</button>
         <button class="pagination-button" onclick="fetchAndStoreRepos(4)">4</button>
         <button class="pagination-button" onclick="fetchAndStoreRepos(5)">5</button>
@@ -56,11 +45,10 @@
         <button class="pagination-button" onclick="fetchAndStoreRepos(9)">9</button>
         <button class="pagination-button" id="nextPageButton">>></button>
     </div>
-    <!-- end for box navigation -->
 
     <div class="pagination-buttons">
-        <button class="pagination-button" onclick="fetchAndStoreRepos()" id="older">&lt; Older</button>
-        <button class="pagination-button" onclick="fetchAndStoreRepos()" id="newer">Newer &gt;</button>
+        <button class="pagination-button"  id="older">&lt; Older</button>
+        <button class="pagination-button"  id="newer">Newer &gt;</button>
     </div>
 
     <script src="index.js"></script>

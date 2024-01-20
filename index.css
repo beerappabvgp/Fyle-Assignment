@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px; /* Adjust as needed for spacing */
+    padding: 20px; 
   }
   
   #profileImage {
@@ -25,24 +25,18 @@
   }
 
   .userinfo {
-    /* background-color: #f4f4f4; */
     padding: 15px;
     border-radius: 8px;
-    /* margin-top: 20px; */
     display: flex;
     flex-direction: column;
-    /* align-items: center;
-    justify-content: center; */
   }
   
   .userinfo h1 {
     font-size: 24px;
-    /* margin-bottom: 10px; */
   }
   
   .userinfo p {
     font-size: 16px;
-    /* margin-bottom: 8px; */
   }
   
   #card {
@@ -112,7 +106,6 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    /* margin: 20px; */
   }
 
   .number-box {
@@ -197,7 +190,7 @@
     display: none;
   }
 
-  /* Add this to your index.css file */
+  
 
 #parentSearch {
     display: flex;
@@ -257,18 +250,18 @@
   }
 
   body.dark-mode a {
-    color: #6cb2eb; /* Light blue color for links in dark mode */
+    color: #6cb2eb; 
   }
   
   body.dark-mode a:hover {
-    color: #4189c7; /* Darker blue color on hover */
+    color: #4189c7; 
   }
   
   #darkModeButtons {
     margin-top: 10px;
     display: flex;
-    justify-content: flex-end; /* Align buttons to the right */
-    margin-left: auto; /* Shift both buttons to the right */
+    justify-content: flex-end; 
+    margin-left: auto; 
     gap: 5px;
   }
   
@@ -296,13 +289,13 @@
 
 @media screen and (max-width: 576px) {
   #details {
-    flex-direction: column; /* Stack into a single column on small screens */
+    flex-direction: column; 
   }
 
   #imageContainer, .userinfo {
-    width: 100%; /* Full width for both image and userinfo on small screens */
-    max-width: none; /* Remove max-width for full width on small screens */
-    margin-left: 0; /* Remove left margin on small screens */
+    width: 100%; 
+    max-width: none; 
+    margin-left: 0; 
   }
 }
 

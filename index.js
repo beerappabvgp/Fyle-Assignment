@@ -57,11 +57,10 @@ async function fetchAndStoreRepos(page = 1 , items) {
       items = 100;
     }
     const repositoriesData = await fetchGitHubRepos(username, reposPerPage = items, page);
-    repositories.length = 0; // Clear existing repositories
+    repositories.length = 0; 
     repositories.push(...repositoriesData);
     tempPage = page;
     console.log(repositories);
-    // html logic starts from here
     displayDetails();
     showRepositories(items,repositories);
   } catch (error) {
@@ -76,7 +75,6 @@ function searchRepositories() {
     const searchQuery = searchInput.value.toLowerCase();
   
     const filteredRepositories = repositories.filter(repo => {
-      // Add null check before calling toLowerCase()
       const repoName = repo.name ? repo.name.toLowerCase() : '';
       const repoDescription = repo.description ? repo.description.toLowerCase() : '';
   
@@ -145,10 +143,8 @@ function displayDetails() {
   }
   const profileImage = document.getElementById("profileImage");
   const userNameElement = document.getElementById("userName");
-//   const bioElement = document.getElementById("bio");
   const locationElement = document.getElementById("location");
   const twitterLinkElement = document.getElementById("twitterLink");
-//   const githubLinkElement = document.getElementById("githubLink");
   const followers = document.getElementById("followers");
   const followingUrl = document.getElementById("following_url");
 
@@ -157,38 +153,31 @@ function displayDetails() {
   profileImage.src = user.avatar_url;
   userNameElement.textContent = user.login;
 
-//   bioElement.innerHTML = "Lives in America";
 
   locationElement.innerHTML = "Orlando";
 
   const githubUrl = document.getElementById("github");
   githubUrl.href = user.html_url;
   githubUrl.innerHTML = user.html_url;
-
-//   githubLinkElement.href = user.html_url;
-//   githubLinkElement.textContent = user.html_url;
-//   githubLinkElement.classList.remove("hidden");
   followers.href = user.followers_url;
   followers.innerHTML = user.followers_url;
   followingUrl.href = user.following_url;
   followingUrl.innerHTML = user.following_url;
 }
 
-// Initial setup
+
 fetchAndStoreRepos();
 
 function fetchAndStorePrevPageRepos() {
     if (tempPage > 1) {
       const prevPage = tempPage - 1;
   
-      // Find matching cache key in repositoryCache
       const cacheKey = Object.keys(repositoryCache).find(key => {
         return key === prevPage.toString();
       });
       console.log(`cacheKey`);
       if (cacheKey) {
         console.log(`entered inside cachekey, ${cacheKey}`);
-        // Split the cache key into pageNumber and itemsPerPage
         const tempItemsPerPage = repositoryCache[cacheKey].reposPerPage;
         fetchAndStoreRepos(parseInt(cacheKey), parseInt(tempItemsPerPage));
       }
@@ -202,15 +191,13 @@ function fetchAndStoreNextPageRepos() {
 
     if (tempPage < totalPages) {
         const nextPage = tempPage + 1;
-    
-        // Find matching cache key in repositoryCache
         const cacheKey = Object.keys(repositoryCache).find(key => {
           return key === nextPage.toString();
         });
         console.log(`cacheKey`);
         if (cacheKey) {
           console.log(`entered inside cachekey, ${cacheKey}`);
-          // Split the cache key into pageNumber and itemsPerPage
+          
           const tempItemsPerPage = repositoryCache[cacheKey].reposPerPage;
           fetchAndStoreRepos(parseInt(cacheKey), parseInt(tempItemsPerPage));
         }
@@ -221,18 +208,16 @@ function fetchAndStoreNextPageRepos() {
 }
 
 
-// Add event listeners to the hardcoded buttons
+
 document.getElementById('prevPageButton').addEventListener('click', fetchAndStorePrevPageRepos);
 document.getElementById('nextPageButton').addEventListener('click', fetchAndStoreNextPageRepos);
+document.getElementById('older').addEventListener('click', fetchAndStorePrevPageRepos);
+document.getElementById('newer').addEventListener('click', fetchAndStoreNextPageRepos);
 
-// document.getElementById('older').addEventListener('click', fetchOlder);
-// document.getElementById('newer').addEventListener('click', fetchNewer);
 const darkModeButtons = document.getElementById('darkModeButtons');
 
 function toggleDarkMode(isDarkMode) {
-  // Toggle dark mode by adding/removing a class to the body
   document.body.classList.toggle('dark-mode', isDarkMode);
 }
 
-// Initially set light mode
 toggleDarkMode(true);
