@@ -19,3 +19,8 @@ This project fetches GitHub repositories using the GitHub REST API and displays 
 1. **Clone or Fork the Repository:**
    ```bash
    git clone https://github.com/yourusername/github-repos-viewer.git
+2. **Open the Project in a Web Browser:**
+   - Navigate to the project directory in your terminal or file explorer.
+   - Locate the `index.html` file in the project folder.
+   - Right-click on `index.html` and choose to open it with your preferred web browser.
+   - Alternatively, you can directly drag and drop the `index.html` file into your web browser.
