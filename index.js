@@ -101,7 +101,7 @@ function showRepositories(items,repositories) {
     const repoCard = document.createElement('div');
     repoCard.classList.add('repo-card');
 
-    const repoName = document.createElement('div');
+    const repoName = document.createElement('h1');
     repoName.classList.add('repo-name');
     repoName.textContent = repoToShow.name;
 
