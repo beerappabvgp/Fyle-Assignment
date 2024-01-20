@@ -53,6 +53,9 @@ async function fetchAndStoreRepos(page = 1 , items) {
   try {
     showLoadingIndicator(true); 
     console.log(`from fetchAndStoreRepos , ${page}`);
+    if (items > 100) {
+      items = 100;
+    }
     const repositoriesData = await fetchGitHubRepos(username, reposPerPage = items, page);
     repositories.length = 0; // Clear existing repositories
     repositories.push(...repositoriesData);
@@ -60,7 +63,7 @@ async function fetchAndStoreRepos(page = 1 , items) {
     console.log(repositories);
     // html logic starts from here
     displayDetails();
-    showRepositories(items);
+    showRepositories(items,repositories);
   } catch (error) {
     console.error("Failed to fetch repositories:", error.message);
   } finally {
@@ -68,7 +71,26 @@ async function fetchAndStoreRepos(page = 1 , items) {
   }
 }
 
-function showRepositories(items) {
+function searchRepositories() {
+    const searchInput = document.getElementById('searchInput');
+    const searchQuery = searchInput.value.toLowerCase();
+  
+    const filteredRepositories = repositories.filter(repo => {
+      // Add null check before calling toLowerCase()
+      const repoName = repo.name ? repo.name.toLowerCase() : '';
+      const repoDescription = repo.description ? repo.description.toLowerCase() : '';
+  
+      return (
+        repoName.includes(searchQuery) ||
+        repoDescription.includes(searchQuery)
+      );
+    });
+  
+    showRepositories(tempItemsPerPage, filteredRepositories);
+  }
+  
+
+function showRepositories(items,repositories) {
   const startIndex = 0;
   const endIndex = items;
   console.log(startIndex, endIndex);
@@ -116,30 +138,40 @@ function showLoadingIndicator(show) {
   }
 
 function displayDetails() {
+
   if (repositories.length === 0) {
     console.error("No repositories available.");
     return;
   }
-
   const profileImage = document.getElementById("profileImage");
   const userNameElement = document.getElementById("userName");
-  const bioElement = document.getElementById("bio");
+//   const bioElement = document.getElementById("bio");
   const locationElement = document.getElementById("location");
   const twitterLinkElement = document.getElementById("twitterLink");
-  const githubLinkElement = document.getElementById("githubLink");
+//   const githubLinkElement = document.getElementById("githubLink");
+  const followers = document.getElementById("followers");
+  const followingUrl = document.getElementById("following_url");
 
   const user = repositories[0].owner;
-
+  console.log(user.avatar_url);
   profileImage.src = user.avatar_url;
   userNameElement.textContent = user.login;
 
-  bioElement.innerHTML = "Lives in America";
+//   bioElement.innerHTML = "Lives in America";
 
   locationElement.innerHTML = "Orlando";
 
   const githubUrl = document.getElementById("github");
   githubUrl.href = user.html_url;
   githubUrl.innerHTML = user.html_url;
+
+//   githubLinkElement.href = user.html_url;
+//   githubLinkElement.textContent = user.html_url;
+//   githubLinkElement.classList.remove("hidden");
+  followers.href = user.followers_url;
+  followers.innerHTML = user.followers_url;
+  followingUrl.href = user.following_url;
+  followingUrl.innerHTML = user.following_url;
 }
 
 // Initial setup
@@ -188,16 +220,19 @@ function fetchAndStoreNextPageRepos() {
       }
 }
 
-function fetchOlder() {
-
-}
-function fetchNewer() {
-
-}
 
 // Add event listeners to the hardcoded buttons
 document.getElementById('prevPageButton').addEventListener('click', fetchAndStorePrevPageRepos);
 document.getElementById('nextPageButton').addEventListener('click', fetchAndStoreNextPageRepos);
 
-document.getElementById('older').addEventListener('click', fetchOlder);
-document.getElementById('newer').addEventListener('click', fetchNewer);
+// document.getElementById('older').addEventListener('click', fetchOlder);
+// document.getElementById('newer').addEventListener('click', fetchNewer);
+const darkModeButtons = document.getElementById('darkModeButtons');
+
+function toggleDarkMode(isDarkMode) {
+  // Toggle dark mode by adding/removing a class to the body
+  document.body.classList.toggle('dark-mode', isDarkMode);
+}
+
+// Initially set light mode
+toggleDarkMode(true);
