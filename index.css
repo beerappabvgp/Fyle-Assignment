@@ -244,6 +244,10 @@
     font-size: 16px;
     margin-top: 20px;
   }
+
+  .userinfo span {
+    margin-bottom: 10px;
+  }
   
   .dark-mode .repo-card {
     background-color: #444;
